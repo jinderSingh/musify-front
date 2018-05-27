@@ -188,7 +188,8 @@ export class ArtistFormComponent implements OnInit, OnDestroy {
     if (this.formGroup) {
       this.addToFormArray(this.defaultValues.people, 'people');
       this.addToFormArray(this.defaultValues.relatedArtists, 'relatedArtists');
-      this.formGroup.patchValue(this.defaultValues);
+      this.formGroup.patchValue(this.defaultValues, { emitEvent: true });
+      this.artistChanged.emit(this.formValuesChangeType);
     }
     this.insertIntoEntityContainer(EntityType.PEOPLE_ENTITY, artist.people);
     this.insertIntoEntityContainer(EntityType.PEOPLE_ENTITY, artist.relatedArtists);
