@@ -87,11 +87,11 @@ export class ArtistComponent implements OnInit, OnDestroy {
         takeWhile(value => this.isAlive),
         switchMap(value => value ? this.artistService.filter({
           style: value
-        }) : of ([]))
+        }) : of([]))
       )
       .subscribe(
-        value => this.setArtists( < ArtistType[] > value),
-        error => console.log(error)
+        value => this.setArtists(<ArtistType[]>value),
+        error => this.handleError(error);
       );
   }
 
