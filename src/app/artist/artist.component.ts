@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, takeWhile, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, skipWhile, switchMap, takeWhile } from 'rxjs/operators';
 import { DataTableType } from './../models/data-table.type';
 import { ArtistType } from './models/artist.type';
 import { ArtistService } from './services/artist-service';
@@ -27,7 +27,7 @@ export class ArtistComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.buildFormControl();
     this.findAllAndSetArtists();
-    this.makeSubscription();
+    this.formControlSubscription();
   }
 
   ngOnDestroy() {
@@ -77,14 +77,14 @@ export class ArtistComponent implements OnInit, OnDestroy {
   }
 
 
-  private makeSubscription() {
+  private formControlSubscription() {
     this.searchFormControl
       .valueChanges
       .pipe(
         distinctUntilChanged(),
-        tap(value => console.log(value)),
-        takeWhile(value => this.isAlive),
         debounceTime(500),
+        skipWhile(value => !value),
+        takeWhile(value => this.isAlive),
         switchMap(value => value ? this.artistService.filter({
           style: value
         }) : of ([]))
