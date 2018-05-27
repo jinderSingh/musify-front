@@ -58,13 +58,28 @@ export class PeopleFormComponent implements OnInit, OnDestroy {
   } {
     return {
       id: [null],
-      name: [null, Validators.required],
-      year: [null, Validators.required]
+      name: [null, {
+        updateOn: 'blur',
+        validators: [Validators.required]
+      }],
+
+      year: [null]
+
     };
   }
 
   get minYear(): number {
     return 1970;
+  }
+
+  get isNameInvalidAndTouched(): boolean {
+    const {
+      invalid,
+      touched
+    } = this.formGroup.get('name');
+
+    return invalid && touched;
+
   }
 
 }

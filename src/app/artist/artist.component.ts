@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, skipWhile, switchMap, takeWhile } from 'rxjs/operators';
+import { distinctUntilChanged, first, switchMap, takeWhile, tap } from 'rxjs/operators';
 import { DataTableType } from './../models/data-table.type';
 import { ArtistType } from './models/artist.type';
 import { ArtistService } from './services/artist-service';
@@ -38,7 +37,7 @@ export class ArtistComponent implements OnInit, OnDestroy {
     this.artistService
       .delete(artist.id)
       .pipe(
-        takeWhile(value => this.isAlive)
+        first()
       )
       .subscribe(
         value => this.findAllAndSetArtists(),
@@ -82,16 +81,15 @@ export class ArtistComponent implements OnInit, OnDestroy {
       .valueChanges
       .pipe(
         distinctUntilChanged(),
-        debounceTime(500),
-        skipWhile(value => !value),
+        tap(value => console.log(!value)),
         takeWhile(value => this.isAlive),
-        switchMap(value => value ? this.artistService.filter({
+        switchMap(value => this.artistService.filter({
           style: value
-        }) : of([]))
+        }))
       )
       .subscribe(
-        value => this.setArtists(<ArtistType[]>value),
-        error => this.handleError(error);
+        value => this.setArtists( < ArtistType[] > value),
+        error => this.handleError(error)
       );
   }
 
@@ -99,7 +97,7 @@ export class ArtistComponent implements OnInit, OnDestroy {
   private findAllAndSetArtists() {
     this.artistService
       .getAll()
-      .pipe(takeWhile(values => this.isAlive))
+      .pipe(first())
       .subscribe(
         artists => this.setArtists(artists),
         error => console.log(error)

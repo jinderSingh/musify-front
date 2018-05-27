@@ -1,9 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
-import { delay, distinctUntilChanged, skipWhile, takeWhile, tap } from 'rxjs/operators';
+import { delay, distinctUntilChanged, first, skipWhile, takeWhile, tap } from 'rxjs/operators';
 import { StylesQueryService } from '../../../shared/services/shared-services/styles-query.service';
+import { ArtistFilterType } from '../../models/artist-filter.type';
 import { EntityType } from '../../models/entity.type';
 import { ArtistService } from '../../services/artist-service';
 import { FormValuesChangeType } from './../../../models/form-values-change.type';
@@ -114,7 +115,7 @@ export class ArtistFormComponent implements OnInit, OnDestroy {
   }
 
 
-  private buildForm(defaultValues ? : ArtistType) {
+  private buildForm(defaultValues ?: ArtistType) {
     this.formGroup = this.fb.group(this.formControls);
 
     if (defaultValues !== null && defaultValues !== undefined) {
@@ -128,7 +129,7 @@ export class ArtistFormComponent implements OnInit, OnDestroy {
       .pipe(
         delay(500),
         tap(values => this.isFetching = false),
-        takeWhile(values => this.isAlive)
+        first()
       )
       .subscribe(
         values => {
@@ -137,7 +138,8 @@ export class ArtistFormComponent implements OnInit, OnDestroy {
           this.stylesList = values[2];
           this.cd.markForCheck();
         },
-        error => this.handleError(error)
+        error => this.handleError(error),
+        () => console.log('completed')
       );
   }
 
@@ -200,7 +202,7 @@ export class ArtistFormComponent implements OnInit, OnDestroy {
   get listOfApiCalls() {
     return [
       this.peopleQueryService.getAll(),
-      this.artistService.getAll(),
+      this.artistService.filter(this.artistFilter),
       this.stylesQueryService.getAll(),
     ];
   }
@@ -230,7 +232,7 @@ export class ArtistFormComponent implements OnInit, OnDestroy {
   } {
     return {
       id: [null],
-      name: [null],
+      name: [null, {updateOn: 'blur', validators: [Validators.required]}],
       year: [null],
       people: this.formArray,
       styles: [null],
@@ -282,5 +284,22 @@ export class ArtistFormComponent implements OnInit, OnDestroy {
 
   get totalArtistSelected(): number {
     return this.artistFormArray ? this.artistFormArray.length : 0;
+  }
+
+  get artistFilter(): ArtistFilterType {
+    const {
+      id: artistId
+    } = this.formGroup.getRawValue();
+    const filter = {
+      revertFilter: true,
+      artistIds: artistId ? [artistId] : []
+    };
+
+    return filter;
+  }
+
+  get isNameControlInvalidAndTouched(): boolean {
+    const { invalid, touched } = this.formGroup.get('name');
+    return invalid && touched;
   }
 }

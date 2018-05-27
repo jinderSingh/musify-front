@@ -16,7 +16,7 @@
         <form [formGroup]="formGroup">
           <div class="form-group mb-2">
             <label for="name">Name</label>
-            <input type="text" placeholder="Artist name" formControlName="name" class="form-control" id="name">
+            <input type="text" placeholder="Artist name" formControlName="name" class="form-control" id="name" [ngClass]="{'border-danger': isNameControlInvalidAndTouched}">
           </div>
           <div class="form-group mb-2">
             <label for="year">Year</label>
