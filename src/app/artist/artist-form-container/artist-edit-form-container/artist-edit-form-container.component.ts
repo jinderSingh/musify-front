@@ -68,6 +68,7 @@ export class ArtistEditFormContainerComponent implements OnInit, OnDestroy {
   }
 
   private handleError(error) {
+    this.isSaving = false;
     this.msgClassName = this.errorClassName;
     this.msg = `Error occurred '${error.message}'.`;
   }
