@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { distinctUntilChanged, first, switchMap, takeWhile, tap } from 'rxjs/operators';
+import { distinctUntilChanged, first, switchMap, takeWhile } from 'rxjs/operators';
 import { DataTableType } from './../models/data-table.type';
 import { ArtistType } from './models/artist.type';
 import { ArtistService } from './services/artist-service';
@@ -81,7 +81,6 @@ export class ArtistComponent implements OnInit, OnDestroy {
       .valueChanges
       .pipe(
         distinctUntilChanged(),
-        tap(value => console.log(!value)),
         takeWhile(value => this.isAlive),
         switchMap(value => this.artistService.filter({
           style: value
