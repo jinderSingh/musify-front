@@ -1,0 +1,42 @@
+<div class="row flex-flow flex-wrap justify-content-center align-content-between">
+  <div class="col-md-12 bg-dark text-white jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">Musify Collection</h1>
+      <p class="lead">
+        Find your favourite artsits music without any cost!
+      </p>
+      <p>
+        Wanna create new artist
+        <strong>
+          <a [routerLink]="[ './new']" role="button">click here</a>
+        </strong>
+      </p>
+      <hr/>
+
+      <div class="row justify-content-center">
+        <form novalidate class="col-md-8">
+          <input class="form-control" [formControl]="searchFormControl" placeholder="Search artist by style..." type="text">
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="card col-md-8 rounded-0">
+    <div class="card-body">
+      <h4 class="card-title">Results</h4>
+      <hr>
+
+      <div class="row justify-content-center flex-row flex-wrap">
+        <div class="col-md-12 p-sm-2">
+          <app-artist-list (deleteArtist)="delete($event)" [headers]="headers" [artistList]="artistList"></app-artist-list>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="alert" role="alert" [ngClass]="msgClassName">
+        <strong>{{msg}}</strong>
+      </div>
+    </div>
+
+  </div>
+</div>

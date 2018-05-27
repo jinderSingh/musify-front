@@ -1,0 +1,29 @@
+<table class="table table-dark table-striped table-bordered table-hover
+    shadow-sm p-3 mb-5 rounded text-center" *ngIf="artistList && artistList.length; else emptyListMsg">
+  <thead>
+    <tr>
+      <ng-container *ngFor="let header of headers">
+        <th>{{header.header}}</th>
+      </ng-container>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let artist of artistList">
+      <td *ngFor="let header of headers">
+        {{artist[header.field]}}
+      </td>
+      <td>
+        <button class="btn btn-outline-danger btn-sm" (click)="delete(artist)">Delete</button>
+        <a class="btn btn-outline-primary btn-sm m-sm-2" [routerLink]="['./edit', artist.id]">Edit</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<ng-template #emptyListMsg>
+  <div class="alert alert-info" role="alert">
+    {{emptyMsg}}
+  </div>
+</ng-template>

@@ -1,0 +1,21 @@
+<div class="col-md-12">
+  <div class="row justify-content-around">
+    <div class="card col-md-6">
+      <div class="card-body">
+        <h6 class="card-title text-center">People Form</h6>
+        <hr>
+        <form [formGroup]="formGroup">
+          <div class="form-group mb-2">
+            <label for="name">Name</label>
+            <input type="text" placeholder="Person name" formControlName="name" class="form-control" id="name">
+          </div>
+          <div class="form-group mb-2">
+            <label for="year">Year</label>
+            <input type="number" formControlName="year" class="form-control" [min]="minYear" id="year" placeholder="Year">
+          </div>
+         <ng-content select=".btn"></ng-content>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

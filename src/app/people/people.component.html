@@ -1,0 +1,13 @@
+<div class="row flex-column flex-wrap justify-content-center align-content-center" style="height: 80vh;">
+  <app-people-form (peopleChanged)="peopleToSave = $event">
+    <button type="button" [ngClass]="{'disabled': !isFormValid}" class="btn btn-outline-success mb-2" (click)="persist()" [disabled]="isSaving">
+      Save
+      <i class="fas fa-circle-notch fa-spin" *ngIf="isSaving"></i>
+    </button>
+  </app-people-form>
+</div>
+<div class="row justify-content-center">
+  <div class="alert" role="alert" [ngClass]="msgClassName">
+    <strong>{{msg}}</strong>
+  </div>
+</div>

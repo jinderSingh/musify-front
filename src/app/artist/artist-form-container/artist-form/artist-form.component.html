@@ -1,0 +1,86 @@
+<div class="col-md-12 p-sm-2">
+  <div class="row justify-content-center">
+    <div class="col-md-2">
+      <app-list-component (itemSelectEvent)="onRelatedArtistSelected($event)" [data]="artistList" [displayLoadingIcon]="isFetching">
+        <ng-container list-header>
+          <h6 class="h6 text-center">Select Artists</h6>
+          <hr>
+        </ng-container>
+      </app-list-component>
+    </div>
+
+    <div class="card col-md-6">
+      <div class="card-body">
+        <h6 class="card-title text-center">Artist Form</h6>
+        <hr>
+        <form [formGroup]="formGroup">
+          <div class="form-group mb-2">
+            <label for="name">Name</label>
+            <input type="text" placeholder="Artist name" formControlName="name" class="form-control" id="name">
+          </div>
+          <div class="form-group mb-2">
+            <label for="year">Year</label>
+            <input type="number" formControlName="year" class="form-control" [min]="minYear" id="year" placeholder="Year">
+          </div>
+          <div class="form-group">
+            <label for="styles">Select styles</label>
+            <select multiple formControlName="styles" class="form-control" id="styles">
+              <option *ngFor="let style of stylesList" [value]="style">{{style.name}}</option>
+            </select>
+          </div>
+
+          <h6>
+            Selected People
+            <span class="badge badge-primary p-sm-2 m-sm-1">
+              {{totalPeopleSelected}}
+            </span>
+          </h6>
+          <ng-container formArrayName="people" *ngFor="let people of peopleFormArray.controls; let i=index">
+            <!-- <app-name-id-form [formGroup]="people"></app-name-id-form> -->
+            <ng-container formGroupName="{{i}}">
+              <span class="badge badge-primary p-sm-2 m-sm-1">
+                {{people.value.name}}
+                <i class="far fa-times-circle" (click)="removePeople(i, people.value)" style="cursor: pointer;"></i>
+              </span>
+            </ng-container>
+          </ng-container>
+
+          <hr>
+
+          <h6>
+            Selected Related Artist
+            <span class="badge badge-primary p-sm-2 m-sm-1">
+              {{totalArtistSelected}}
+            </span>
+          </h6>
+          <ng-container formArrayName="relatedArtists" *ngFor="let artist of artistFormArray.controls; let i = index">
+            <ng-container formGroupName="{{i}}">
+              <span class="badge badge-primary p-sm-2 m-sm-1">
+                {{artist.value.name}}
+                <i class="far fa-times-circle" (click)="removeArtist(i, artist.value)" style="cursor: pointer;"></i>
+
+              </span>
+            </ng-container>
+          </ng-container>
+
+          <div class="row col-md-12 justify-content-end">
+            <ng-content select=".btn"></ng-content>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <div class="col-md-2">
+      <app-list-component (itemSelectEvent)="onPeopleSelected($event)" [data]="peopleList" [displayLoadingIcon]="isFetching">
+
+        <ng-container list-header>
+          <h6 class="h6 text-center">Select People</h6>
+          <hr>
+        </ng-container>
+      </app-list-component>
+    </div>
+
+  </div>
+
+</div>

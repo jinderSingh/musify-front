@@ -1,0 +1,14 @@
+<div class="text-center">
+  <ng-content select="[list-header]"></ng-content>
+  <ul class="list-group" style="overflow-y: auto;" *ngIf="(!displayLoadingIcon || isDataDefined); else loadingTemplate">
+    <ng-container *ngFor="let item of data">
+      <li class="list-group-item" style="cursor: pointer;" [attr.id]="item.id" (click)="itemSelected(item)">
+        {{item.name}}
+      </li>
+    </ng-container>
+  </ul>
+</div>
+
+<ng-template #loadingTemplate>
+  <i class="fas fa-circle-notch fa-spin"></i>
+</ng-template>
